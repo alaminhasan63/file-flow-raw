@@ -14,9 +14,24 @@ export function ContinueFilingButton() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push("/sign-in?next=/app/start");
+        // Go directly to public filing wizard
+        router.push("/start");
       } else {
-        router.push("/app/start");
+        // If logged in, check for existing filings first
+        const { data: existingFilings } = await supabase
+          .from("filings")
+          .select("id, stage")
+          .eq("stage", "intake")
+          .order("created_at", { ascending: false })
+          .limit(1);
+
+        if (existingFilings && existingFilings.length > 0) {
+          // Continue existing filing in authenticated area
+          router.push("/app/start");
+        } else {
+          // Start new filing in authenticated area
+          router.push("/app/start");
+        }
       }
     } finally {
       setBusy(false);

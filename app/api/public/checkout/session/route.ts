@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { filingId, amount, successUrl, cancelUrl } = body;
+    const { filingId, amount, businessName, state, successUrl, cancelUrl } =
+      body;
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
@@ -39,9 +40,16 @@ export async function POST(request: NextRequest) {
       cancel_url: cancelUrl,
       url: `${siteUrl}/checkout/mock?session_id=cs_test_${Math.random()
         .toString(36)
-        .substr(2, 9)}&filing_id=${filingId}`,
+        .substr(
+          2,
+          9
+        )}&filing_id=${filingId}&amount=${amount}&business_name=${encodeURIComponent(
+        businessName || "Your LLC"
+      )}&state=${state || "WY"}`,
       metadata: {
         filing_id: filingId,
+        business_name: businessName,
+        state: state,
       },
     };
 

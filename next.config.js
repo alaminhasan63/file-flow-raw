@@ -2,8 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    // Disable some experimental features that might cause issues
-    optimizePackageImports: false,
+    // Optimize specific packages for better performance
+    optimizePackageImports: ["@radix-ui/react-icons", "lucide-react"],
   },
   webpack(config, { dev }) {
     if (dev) {

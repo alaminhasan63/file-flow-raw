@@ -39,7 +39,7 @@ export default function MarketingPage() {
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
                 <a
-                  href="/app/start"
+                  href="/start"
                   className="group inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:from-blue-700 hover:to-indigo-700 hover:shadow-xl hover:-translate-y-1"
                 >
                   Get started now
@@ -275,7 +275,7 @@ export default function MarketingPage() {
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="/app/start"
+              href="/start"
               className="group inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-lg font-semibold text-blue-600 shadow-lg transition-all duration-300 hover:bg-gray-50 hover:shadow-xl hover:-translate-y-1"
             >
               Start your filing

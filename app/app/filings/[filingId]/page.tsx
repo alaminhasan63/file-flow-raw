@@ -27,6 +27,7 @@ function CustomerFilingStatusContent({ params }: { params: Promise<{ filingId: s
   const [mounted, setMounted] = useState(false);
 
   const [filing, setFiling] = useState<any>(null);
+  const [payments, setPayments] = useState<any[]>([]);
   const [runs, setRuns] = useState<any[]>([]);
   const [msgs, setMsgs] = useState<any[]>([]);
   const [docs, setDocs] = useState<any[]>([]);
@@ -52,15 +53,15 @@ function CustomerFilingStatusContent({ params }: { params: Promise<{ filingId: s
           // Create mock filing data for display
           const mockFiling = {
             id: filingId,
-            stage: 'queued',
+            stage: 'ready', // Show as "Payment Processed"
             state_code: 'WY',
             filing_type: 'LLC_FORMATION',
-            quoted_total_cents: 29900,
-            paid_total_cents: 29900,
+            quoted_total_cents: 52700, // Updated to match typical total
+            paid_total_cents: 52700,
             created_at: new Date().toISOString(),
             business_id: `mock-business-${filingId}`,
             external_ref: { test: true, mock: true },
-            ein_service: false,
+            ein_service: true,
             mail_forwarding: false,
             registered_agent_address: '123 Main St, Cheyenne, WY 82001',
             use_fileflow_registered_agent: true,
@@ -70,6 +71,18 @@ function CustomerFilingStatusContent({ params }: { params: Promise<{ filingId: s
             mail_forwarding_payload: {}
           };
           setFiling(mockFiling);
+
+          // Create mock payment data
+          const mockPayments = [{
+            id: `mock-payment-${filingId}`,
+            filing_id: filingId,
+            status: 'succeeded',
+            provider: 'stripe',
+            provider_ref: 'mock_session_123',
+            amount_cents: 52700,
+            created_at: new Date().toISOString()
+          }];
+          setPayments(mockPayments);
           setInitialLoadComplete(true);
           setLoading(false);
           console.log('Mock filing created successfully');
@@ -87,11 +100,17 @@ function CustomerFilingStatusContent({ params }: { params: Promise<{ filingId: s
         setMsgs(m ?? []);
         const { data: d } = await supabase.from("documents").select("*").eq("filing_id", filingId).order("created_at", { ascending: false });
         setDocs(d ?? []);
+
+        // Load payment data
+        const { data: p } = await supabase.from("payments").select("*").eq("filing_id", filingId).order("created_at", { ascending: false });
+        setPayments(p ?? []);
+        console.log('Payments loaded for real filing:', p?.length || 0);
       } else {
         // Clear related data for non-existent filings
         setRuns([]);
         setMsgs([]);
         setDocs([]);
+        setPayments([]);
       }
 
     } catch (error) {
@@ -202,6 +221,75 @@ function CustomerFilingStatusContent({ params }: { params: Promise<{ filingId: s
                 <span className="text-muted-foreground">Submitted:</span>
                 <span className="font-medium">{new Date(filing.created_at).toLocaleDateString()}</span>
               </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Payment Information Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <CreditCard className="w-5 h-5" />
+            <span>Payment Information</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Total Quoted:</span>
+                <span className="font-semibold text-lg">${((filing.quoted_total_cents || 0) / 100).toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Total Paid:</span>
+                <span className="font-bold text-xl text-green-600">${((filing.paid_total_cents || 0) / 100).toFixed(2)}</span>
+              </div>
+              {(filing.paid_total_cents || 0) > 0 && (
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Payment Status:</span>
+                  <span className="inline-flex items-center gap-1 text-sm font-medium text-green-600">
+                    <CheckCircle className="w-4 h-4" />
+                    Payment Processed
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-3">
+              {payments.length > 0 ? (
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Payment History</h4>
+                  <div className="space-y-2">
+                    {payments.map((payment) => (
+                      <div key={payment.id} className="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium text-green-800">
+                            ${(payment.amount_cents / 100).toFixed(2)}
+                          </span>
+                          <span className="text-xs text-green-600 font-semibold uppercase">
+                            {payment.status}
+                          </span>
+                        </div>
+                        <div className="text-xs text-green-600 mt-1">
+                          {payment.provider} • {new Date(payment.created_at).toLocaleDateString()}
+                        </div>
+                        {payment.provider_ref && (
+                          <div className="text-xs text-gray-500 font-mono mt-1">
+                            Ref: {payment.provider_ref}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-4">
+                  <div className="text-sm text-muted-foreground">
+                    No payment records found
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </CardContent>

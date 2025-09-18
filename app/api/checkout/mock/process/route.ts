@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSupabase } from "@/lib/supabase/server";
-import { getAdminSupabase } from "@/lib/supabase/admin";
+import { createClient } from "@supabase/supabase-js";
+
+// Create admin client with service role key for bypassing RLS
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  }
+);
 
 export async function POST(request: NextRequest) {
   try {
@@ -63,33 +75,44 @@ export async function POST(request: NextRequest) {
       console.log(`Processing payment for filing ${filingId}`);
 
       try {
-        // Skip payment creation for mock checkout to avoid RLS issues
-        // Real payments are created in the actual filing submission process (/app/start/submit)
-        console.log(
-          "Skipping payment creation for mock checkout - RLS policy prevents it"
-        );
+        console.log("Processing payment for filing:", filingId);
 
-        // Note: This is just a UI testing flow. Real filings create proper payment records.
+        // Create payment record using admin client (bypasses RLS)
+        const { data: paymentData, error: paymentError } = await supabaseAdmin
+          .from("payments")
+          .insert({
+            filing_id: filingId,
+            status: "succeeded",
+            provider: "stripe",
+            provider_ref: sessionId,
+            amount_cents: filing.quoted_total_cents || 0,
+          })
+          .select("id")
+          .single();
 
-        // Update filing status to "queued" for real filings
-        if (!filing.business_id.startsWith("mock-business-")) {
-          const { error: filingUpdateError } = await supabase
-            .from("filings")
-            .update({
-              paid_total_cents: filing.quoted_total_cents || 0,
-              stage: "queued",
-            })
-            .eq("id", filingId);
+        if (paymentError) {
+          console.error("Payment creation error:", paymentError);
+        } else {
+          console.log("Payment record created:", paymentData.id);
+        }
 
-          if (filingUpdateError) {
-            console.error("Filing update error:", filingUpdateError);
-          } else {
-            console.log("Filing status updated to queued");
-          }
+        // Update filing status to "ready" (payment processed) using admin client
+        const { error: filingUpdateError } = await supabaseAdmin
+          .from("filings")
+          .update({
+            paid_total_cents: filing.quoted_total_cents || 0,
+            stage: "ready", // Changed from "queued" to "ready" to show "Payment Processed"
+          })
+          .eq("id", filingId);
+
+        if (filingUpdateError) {
+          console.error("Filing update error:", filingUpdateError);
+        } else {
+          console.log("Filing status updated to ready (payment processed)");
         }
       } catch (error) {
         console.error("Payment processing error:", error);
-        // Continue anyway for mock testing
+        // Continue anyway for testing
       }
 
       return NextResponse.json({
