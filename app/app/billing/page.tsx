@@ -1,7 +1,7 @@
 import { getServerSupabase } from "@/lib/supabase/server";
 
 export default async function BillingPage() {
-  const supabase = getServerSupabase();
+  const supabase = await getServerSupabase();
   const { data: rows } = await supabase
     .from("payments")
     .select("id, filing_id, status, provider, amount_cents, created_at")
@@ -28,19 +28,19 @@ export default async function BillingPage() {
           <tbody>
             {(rows ?? []).map(r => (
               <tr key={r.id} className="border-b">
-                <td className="p-3"><a className="underline" href={`/app/filings/${r.filing_id}`}>#{String(r.filing_id).slice(0,8)}</a></td>
+                <td className="p-3"><a className="underline" href={`/app/filings/${r.filing_id}`}>#{String(r.filing_id).slice(0, 8)}</a></td>
                 <td className="p-3">{r.status}</td>
                 <td className="p-3">{r.provider}</td>
-                <td className="p-3">${((r.amount_cents ?? 0)/100).toFixed(2)}</td>
+                <td className="p-3">${((r.amount_cents ?? 0) / 100).toFixed(2)}</td>
                 <td className="p-3">{new Date(r.created_at).toLocaleString()}</td>
               </tr>
             ))}
-            {(!rows || rows.length===0) && <tr><td className="p-3 text-muted-foreground" colSpan={5}>No payments yet.</td></tr>}
+            {(!rows || rows.length === 0) && <tr><td className="p-3 text-muted-foreground" colSpan={5}>No payments yet.</td></tr>}
           </tbody>
           <tfoot>
             <tr>
               <td className="p-3 font-medium" colSpan={3}>Total paid</td>
-              <td className="p-3 font-medium">${(total/100).toFixed(2)}</td>
+              <td className="p-3 font-medium">${(total / 100).toFixed(2)}</td>
               <td />
             </tr>
           </tfoot>

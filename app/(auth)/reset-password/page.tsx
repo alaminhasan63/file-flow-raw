@@ -50,19 +50,19 @@ export default function ResetPasswordPage() {
           </div>
 
           <Card>
-            <CardHeader className="text-center">
+            <CardHeader>
               <CardTitle>Check your email</CardTitle>
               <CardDescription>
-                We've sent a password reset link to {email}
+                We&apos;ve sent a password reset link to {email}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="text-center space-y-4">
                 <p className="text-sm text-muted-foreground">
-                  Click the link in the email to reset your password. If you don't see it, check your spam folder.
+                  Click the link in the email to reset your password. If you don&apos;t see it, check your spam folder.
                 </p>
                 <Link href="/sign-in">
-                  <Button variant="outline" className="w-full">
+                  <Button variant="ghost" className="w-full">
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Back to sign in
                   </Button>
@@ -84,11 +84,13 @@ export default function ResetPasswordPage() {
         </div>
 
         <Card>
-          <CardHeader className="text-center">
-            <CardTitle>Reset your password</CardTitle>
-            <CardDescription>
-              Enter your email address and we'll send you a reset link
-            </CardDescription>
+          <CardHeader>
+            <div className="text-center">
+              <CardTitle>Reset your password</CardTitle>
+              <CardDescription>
+                Enter your email address and we&apos;ll send you a reset link
+              </CardDescription>
+            </div>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">

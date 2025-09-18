@@ -3,10 +3,11 @@ import { getAdminSupabase } from "@/lib/supabase/admin";
 
 export async function POST(
   _req: Request,
-  { params }: { params: { filingId: string } }
+  { params }: { params: Promise<{ filingId: string }> }
 ) {
   const admin = getAdminSupabase();
-  const filingId = params.filingId;
+  const resolvedParams = await params;
+  const filingId = resolvedParams.filingId;
 
   const { data: filing, error: fErr } = await admin
     .from("filings")

@@ -1,12 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getBrowserSupabase } from "@/lib/supabase/client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-export default function SignInPage() {
+function SignInForm() {
   const supabase = getBrowserSupabase();
   const router = useRouter();
   const params = useSearchParams();
@@ -43,9 +43,11 @@ export default function SignInPage() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Welcome back</CardTitle>
-            <CardDescription>Sign in to your FileFlow account</CardDescription>
+          <CardHeader>
+            <div className="text-center">
+              <CardTitle className="text-2xl">Welcome back</CardTitle>
+              <CardDescription>Sign in to your FileFlow account</CardDescription>
+            </div>
           </CardHeader>
           <CardContent>
             <form onSubmit={onSubmit} className="space-y-4">
@@ -59,13 +61,13 @@ export default function SignInPage() {
                 <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Email
                 </label>
-                <Input 
-                  name="email" 
-                  type="email" 
-                  required 
-                  placeholder="you@example.com" 
-                  value={email} 
-                  onChange={e=>setEmail(e.target.value)}
+                <Input
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                   className="w-full"
                 />
               </div>
@@ -74,13 +76,13 @@ export default function SignInPage() {
                 <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Password
                 </label>
-                <Input 
-                  name="password" 
-                  type="password" 
-                  required 
-                  placeholder="••••••••" 
-                  value={password} 
-                  onChange={e=>setPassword(e.target.value)}
+                <Input
+                  name="password"
+                  type="password"
+                  required
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
                   className="w-full"
                 />
               </div>
@@ -94,9 +96,9 @@ export default function SignInPage() {
               <a href="/reset-password" className="text-sm text-muted-foreground hover:text-primary">
                 Forgot your password?
               </a>
-              
+
               <div className="text-sm text-muted-foreground">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <a href="/sign-up" className="font-medium text-primary hover:underline">
                   Sign up
                 </a>
@@ -106,5 +108,13 @@ export default function SignInPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInForm />
+    </Suspense>
   );
 }

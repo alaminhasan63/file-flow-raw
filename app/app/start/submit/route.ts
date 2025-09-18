@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
   const { step1, step3, quoted_total_cents } = body || {};
 
-  const supabase = getServerSupabase();
+  const supabase = await getServerSupabase();
   const {
     data: { user },
   } = await supabase.auth.getUser();

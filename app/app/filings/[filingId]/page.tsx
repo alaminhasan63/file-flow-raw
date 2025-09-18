@@ -19,7 +19,7 @@ const FILING_STAGES = [
 
 const ERROR_STAGES = ['rejected', 'needs_info', 'failed'];
 
-function CustomerFilingStatusContent({ params }: { params: { filingId: string } }) {
+function CustomerFilingStatusContent({ params }: any) {
   const supabase = getBrowserSupabase();
   const router = useRouter();
   const filingId = params.filingId;
@@ -168,7 +168,7 @@ function CustomerFilingStatusContent({ params }: { params: { filingId: string } 
           </div>
           <div>
             <h2 className="text-xl font-bold text-green-800">Filing Submitted Successfully!</h2>
-            <p className="text-green-700">Your LLC formation is now being processed. We'll keep you updated on the progress.</p>
+            <p className="text-green-700">Your LLC formation is now being processed. We&apos;ll keep you updated on the progress.</p>
           </div>
         </div>
       </div>
@@ -269,7 +269,7 @@ function CustomerFilingStatusContent({ params }: { params: { filingId: string } 
                         'Processing Failed'}
                   </div>
                   <div className="text-sm text-red-500">
-                    We'll contact you with next steps.
+                    We&apos;ll contact you with next steps.
                   </div>
                 </div>
               </div>
@@ -304,7 +304,7 @@ function CustomerFilingStatusContent({ params }: { params: { filingId: string } 
           {msgs.length === 0 ? (
             <div className="text-center py-6">
               <div className="text-muted-foreground text-sm">
-                No updates yet. We'll notify you of any important developments.
+                No updates yet. We&apos;ll notify you of any important developments.
               </div>
             </div>
           ) : (

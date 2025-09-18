@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { getBrowserSupabase } from "@/lib/supabase/client";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -13,17 +13,16 @@ export default function AdminCatalogPage() {
   const [state, setState] = useState("");
   const [stage, setStage] = useState("");
 
-  async function load() {
+  const load = useCallback(async () => {
     let query = supabase.from("filings").select("id,state_code,filing_type,stage,created_at").order("created_at", { ascending: false }).limit(200);
     if (state) query = query.eq("state_code", state.toUpperCase());
     if (stage) query = query.eq("stage", stage);
     const { data } = await query;
     const data2 = (data ?? []).filter(r => !q || (r.id + r.filing_type + r.stage).toLowerCase().includes(q.toLowerCase()));
     setRows(data2);
-  }
+  }, [supabase, state, stage, q]);
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, []);
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [q, state, stage]);
+  useEffect(() => { load(); }, [load]);
 
   return (
     <div className="space-y-4">
@@ -49,7 +48,7 @@ export default function AdminCatalogPage() {
             <tbody>
               {rows.map((r) => (
                 <tr key={r.id} className="border-b hover:bg-muted/50">
-                  <td className="p-2 font-mono">{r.id.slice(0,8)}…</td>
+                  <td className="p-2 font-mono">{r.id.slice(0, 8)}…</td>
                   <td className="p-2">{r.state_code}</td>
                   <td className="p-2">{r.filing_type}</td>
                   <td className="p-2">{r.stage}</td>

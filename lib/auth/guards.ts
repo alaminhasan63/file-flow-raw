@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getServerSupabase } from "@/lib/supabase/server";
 
 export async function requireAuth() {
-  const supabase = getServerSupabase();
+  const supabase = await getServerSupabase();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -12,7 +12,7 @@ export async function requireAuth() {
 
 export async function requireAdminOrOps() {
   const user = await requireAuth();
-  const supabase = getServerSupabase();
+  const supabase = await getServerSupabase();
   const { data: profile } = await supabase
     .from("profiles")
     .select("role, email")

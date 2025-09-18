@@ -3,11 +3,11 @@ import { getServerSupabase } from "@/lib/supabase/server";
 export const dynamic = "force-dynamic";
 
 export default async function AdminCustomersPage() {
-  const db = getServerSupabase();
+  const db = await getServerSupabase();
   const { data: profiles } = await db
     .from("profiles")
     .select("id, email, full_name, phone, created_at")
-    .eq("role","customer")
+    .eq("role", "customer")
     .order("created_at", { ascending: false });
 
   // counts per customer
@@ -45,7 +45,7 @@ export default async function AdminCustomersPage() {
                 <td className="p-3">{new Date(p.created_at).toLocaleString()}</td>
               </tr>
             ))}
-            {(!profiles || profiles.length===0) && <tr><td className="p-3 text-muted-foreground" colSpan={5}>No customers yet.</td></tr>}
+            {(!profiles || profiles.length === 0) && <tr><td className="p-3 text-muted-foreground" colSpan={5}>No customers yet.</td></tr>}
           </tbody>
         </table>
       </div>

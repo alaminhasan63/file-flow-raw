@@ -3,7 +3,7 @@ import { getServerSupabase } from "@/lib/supabase/server";
 export const dynamic = "force-dynamic";
 
 export default async function AdminWebhooksPage() {
-  const db = getServerSupabase();
+  const db = await getServerSupabase();
   const { data } = await db
     .from("webhooks")
     .select("id,event,status,filing_id,created_at")
@@ -24,15 +24,15 @@ export default async function AdminWebhooksPage() {
             </tr>
           </thead>
           <tbody>
-            {(data ?? []).map(w=>(
+            {(data ?? []).map(w => (
               <tr key={w.id} className="border-b">
                 <td className="p-3">{w.event}</td>
                 <td className="p-3">{w.status}</td>
-                <td className="p-3">{w.filing_id ? <a className="underline" href={`/admin/filings/${w.filing_id}`}>#{String(w.filing_id).slice(0,8)}</a> : "—"}</td>
+                <td className="p-3">{w.filing_id ? <a className="underline" href={`/admin/filings/${w.filing_id}`}>#{String(w.filing_id).slice(0, 8)}</a> : "—"}</td>
                 <td className="p-3">{new Date(w.created_at).toLocaleString()}</td>
               </tr>
             ))}
-            {(!data || data.length===0) && <tr><td className="p-3 text-muted-foreground" colSpan={4}>No webhooks yet.</td></tr>}
+            {(!data || data.length === 0) && <tr><td className="p-3 text-muted-foreground" colSpan={4}>No webhooks yet.</td></tr>}
           </tbody>
         </table>
       </div>

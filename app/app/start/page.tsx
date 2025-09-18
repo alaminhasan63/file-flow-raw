@@ -77,7 +77,7 @@ export default function StartFilingPage() {
       // try to find the latest in-progress filing for this user
       const { data: f } = await supabase
         .from("filings")
-        .select("id, state_code, filing_type, stage, business_id")
+        .select("id, state_code, filing_type, stage, business_id, use_fileflow_registered_agent, registered_agent_address, ein_service, mail_forwarding")
         .eq("stage", "intake")
         .order("created_at", { ascending: false })
         .limit(1)
@@ -664,7 +664,7 @@ export default function StartFilingPage() {
                       ⭐ Use FileFlow as my registered agent <span className="price-highlight">($99/year)</span>
                     </Label>
                     <p className="text-xs text-blue-700 font-medium">
-                      ✅ We'll handle all legal documents and compliance notices for you
+                      ✅ We&apos;ll handle all legal documents and compliance notices for you
                     </p>
                     <p className="text-xs text-green-600 font-semibold">
                       🎯 Recommended - Stay compliant automatically!
@@ -743,7 +743,7 @@ export default function StartFilingPage() {
                       ⭐ Yes, obtain my EIN <span className="price-highlight">($79)</span>
                     </Label>
                     <p className="text-xs text-blue-700 font-medium">
-                      ✅ We'll handle the IRS application process and get your Federal Tax ID number
+                      ✅ We&apos;ll handle the IRS application process and get your Federal Tax ID number
                     </p>
                     <p className="text-xs text-green-600 font-semibold">
                       🎯 Required for business banking - Let us handle the paperwork!
@@ -761,7 +761,7 @@ export default function StartFilingPage() {
                   />
                   <div className="space-y-1">
                     <Label htmlFor="ein-no" className="text-sm font-medium cursor-pointer">
-                      No, I'll handle this myself
+                      No, I&apos;ll handle this myself
                     </Label>
                     <p className="text-xs text-muted-foreground">
                       You can apply for an EIN directly with the IRS at no cost
@@ -801,7 +801,7 @@ export default function StartFilingPage() {
                       ⭐ Yes, handle my business mail forwarding <span className="price-highlight">($199/year)</span>
                     </Label>
                     <p className="text-xs text-blue-700 font-medium">
-                      ✅ We'll receive, scan, and forward your business mail digitally
+                      ✅ We&apos;ll receive, scan, and forward your business mail digitally
                     </p>
                     <p className="text-xs text-green-600 font-semibold">
                       🎯 Never miss important documents - Go paperless!
@@ -819,10 +819,10 @@ export default function StartFilingPage() {
                   />
                   <div className="space-y-1">
                     <Label htmlFor="mail-no" className="text-sm font-medium cursor-pointer">
-                      No, I'll handle my own mail
+                      No, I&apos;ll handle my own mail
                     </Label>
                     <p className="text-xs text-muted-foreground">
-                      You'll manage your business mail directly
+                      You&apos;ll manage your business mail directly
                     </p>
                   </div>
                 </div>
@@ -1104,7 +1104,7 @@ export default function StartFilingPage() {
                   </div>
                   <div className="text-sm text-blue-800">
                     <p className="font-medium mb-1">Secure Payment Processing</p>
-                    <p>Your payment will be processed securely through Stripe. You'll be redirected to complete your payment and then returned to track your filing status.</p>
+                    <p>Your payment will be processed securely through Stripe. You&apos;ll be redirected to complete your payment and then returned to track your filing status.</p>
                   </div>
                 </div>
               </div>

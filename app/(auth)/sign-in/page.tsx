@@ -77,9 +77,11 @@ export default function SignInPage() {
         </div>
 
         <Card>
-          <CardHeader className="text-center">
-            <CardTitle>Welcome back</CardTitle>
-            <CardDescription>Sign in to your FileFlow account</CardDescription>
+          <CardHeader>
+            <div className="text-center">
+              <CardTitle>Welcome back</CardTitle>
+              <CardDescription>Sign in to your FileFlow account</CardDescription>
+            </div>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -120,7 +122,7 @@ export default function SignInPage() {
               </Link>
 
               <div className="text-sm text-muted-foreground">
-                Don't have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <Link href="/sign-up" className="text-primary hover:underline">
                   Sign up
                 </Link>

@@ -3,11 +3,12 @@ import { cookies } from "next/headers";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { DEV_SUPABASE_URL, DEV_SUPABASE_ANON_KEY } from "@/config/dev";
 
-export function getServerSupabase() {
-  const cookieStore = cookies();
+export async function getServerSupabase() {
+  const cookieStore = await cookies();
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || DEV_SUPABASE_URL;
-  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || DEV_SUPABASE_ANON_KEY;
+  const anon =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || DEV_SUPABASE_ANON_KEY;
 
   return createServerClient(url, anon, {
     cookies: {
@@ -15,10 +16,14 @@ export function getServerSupabase() {
         return cookieStore.get(name)?.value;
       },
       set(name: string, value: string, options: CookieOptions) {
-        try { cookieStore.set({ name, value, ...options }); } catch {}
+        try {
+          cookieStore.set({ name, value, ...options });
+        } catch {}
       },
       remove(name: string, options: CookieOptions) {
-        try { cookieStore.set({ name, value: "", ...options }); } catch {}
+        try {
+          cookieStore.set({ name, value: "", ...options });
+        } catch {}
       },
     },
   });

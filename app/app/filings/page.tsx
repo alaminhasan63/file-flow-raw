@@ -3,7 +3,7 @@ import { getServerSupabase } from "@/lib/supabase/server";
 export const dynamic = "force-dynamic";
 
 export default async function FilingsListPage() {
-  const supabase = getServerSupabase();
+  const supabase = await getServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 
@@ -31,16 +31,16 @@ export default async function FilingsListPage() {
             {(rows ?? []).map(r => (
               <tr key={r.id} className="border-b hover:bg-accent/40">
                 <td className="p-3">
-                  <a className="underline" href={`/app/filings/${r.id}`}>#{r.id.slice(0,8)}</a>
+                  <a className="underline" href={`/app/filings/${r.id}`}>#{r.id.slice(0, 8)}</a>
                 </td>
                 <td className="p-3">{r.filing_type}</td>
                 <td className="p-3">{r.state_code}</td>
                 <td className="p-3">{r.stage}</td>
-                <td className="p-3">${((r.quoted_total_cents ?? 0)/100).toFixed(2)}</td>
+                <td className="p-3">${((r.quoted_total_cents ?? 0) / 100).toFixed(2)}</td>
                 <td className="p-3">{new Date(r.created_at).toLocaleString()}</td>
               </tr>
             ))}
-            {(!rows || rows.length===0) && (
+            {(!rows || rows.length === 0) && (
               <tr><td className="p-6 text-muted-foreground" colSpan={6}>No filings yet. <a className="underline" href="/app/start">Start a filing</a>.</td></tr>
             )}
           </tbody>

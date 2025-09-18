@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getBrowserSupabase } from "@/lib/supabase/client";
 import { DocumentsPanel } from "@/components/filings/documents-panel";
 import { Card, CardHeader, CardBody } from "@/components/ui/card";
@@ -15,7 +15,7 @@ export function AdminFilingClient({ filingId, state, filingType }: Props) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  async function load() {
+  const load = useCallback(async () => {
     setErr(null);
     const { data: a } = await supabase
       .from("state_adapters")
@@ -33,9 +33,9 @@ export function AdminFilingClient({ filingId, state, filingType }: Props) {
       .eq("filing_id", filingId)
       .order("created_at", { ascending: false });
     setRuns(r ?? []);
-  }
+  }, [supabase, state, filingType, filingId]);
 
-  useEffect(() => { load(); }, [filingId, state, filingType]);
+  useEffect(() => { load(); }, [load]);
 
   async function queueRun() {
     if (!adapter) { setErr("No enabled adapter for this filing."); return; }

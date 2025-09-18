@@ -55,11 +55,13 @@ export default function SignUpPage() {
           </div>
 
           <Card>
-            <CardHeader className="text-center">
-              <CardTitle>Check your email</CardTitle>
-              <CardDescription>
-                We've sent a confirmation link to your email address
-              </CardDescription>
+            <CardHeader>
+              <div className="text-center">
+                <CardTitle>Check your email</CardTitle>
+                <CardDescription>
+                  We&apos;ve sent a confirmation link to your email address
+                </CardDescription>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-center space-y-4">
@@ -88,11 +90,13 @@ export default function SignUpPage() {
         </div>
 
         <Card>
-          <CardHeader className="text-center">
-            <CardTitle>Create your account</CardTitle>
-            <CardDescription>
-              Enter your details to get started
-            </CardDescription>
+          <CardHeader>
+            <div className="text-center">
+              <CardTitle>Create your account</CardTitle>
+              <CardDescription>
+                Enter your details to get started
+              </CardDescription>
+            </div>
           </CardHeader>
           <CardContent>
             <form onSubmit={onSubmit} className="space-y-4">

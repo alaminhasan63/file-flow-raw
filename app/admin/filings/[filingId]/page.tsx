@@ -16,7 +16,7 @@ type Filing = {
   created_at: string;
 };
 
-export default function AdminFilingPage({ params }: { params: { filingId: string } }) {
+export default function AdminFilingPage({ params }: any) {
   const router = useRouter();
   const supabase = getBrowserSupabase();
   const filingId = params.filingId;
@@ -155,11 +155,10 @@ export default function AdminFilingPage({ params }: { params: { filingId: string
 
       {notice && (
         <div
-          className={`rounded border p-3 text-sm ${
-            notice.kind === "ok"
+          className={`rounded border p-3 text-sm ${notice.kind === "ok"
               ? "border-emerald-200 bg-emerald-50 text-emerald-900"
               : "border-red-200 bg-red-50 text-red-800"
-          }`}
+            }`}
         >
           {notice.text}
         </div>

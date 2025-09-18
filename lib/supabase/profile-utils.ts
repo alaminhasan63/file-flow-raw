@@ -15,11 +15,11 @@ export async function ensureUserProfile(
   supabase: SupabaseClientType,
   user: { id: string; email?: string }
 ): Promise<string | null> {
-  const { error } = await supabase.from("profiles").upsert(
+  const { error } = await (supabase.from("profiles") as any).upsert(
     {
       id: user.id,
       email: user.email || "",
-      role: "customer",
+      role: "customer" as const,
     },
     {
       onConflict: "id",

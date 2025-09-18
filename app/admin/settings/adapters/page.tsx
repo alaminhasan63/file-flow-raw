@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getBrowserSupabase } from "@/lib/supabase/client";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,16 +14,16 @@ export default function AdapterSettingsPage() {
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({ state_code: "WY", filing_type: "formation", name: "Wyoming Formation v1", version: "1.0.0" });
 
-  async function load() {
+  const load = useCallback(async () => {
     const { data } = await supabase
       .from("state_adapters")
       .select("id,state_code,filing_type,name,version,enabled,created_at")
       .order("created_at", { ascending: false })
       .limit(200);
     setRows((data as any) ?? []);
-  }
+  }, [supabase]);
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, []);
+  useEffect(() => { load(); }, [load]);
 
   async function toggle(id: string, enabled: boolean) {
     setBusy(true);

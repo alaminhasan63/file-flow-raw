@@ -125,15 +125,17 @@ export default function PricingPage() {
                                     </div>
                                 )}
 
-                                <CardHeader className="text-center pb-4">
-                                    <CardTitle className="text-2xl">{pkg.name}</CardTitle>
-                                    <CardDescription className="text-sm">{pkg.description}</CardDescription>
+                                <CardHeader>
+                                    <div className="text-center pb-4">
+                                        <CardTitle className="text-2xl">{pkg.name}</CardTitle>
+                                        <CardDescription className="text-sm">{pkg.description}</CardDescription>
 
-                                    <div className="mt-4">
-                                        <div className="text-3xl font-bold">${pkg.price}</div>
-                                        <div className="text-sm text-muted-foreground">+ ${pkg.govtFee} state fee</div>
-                                        <div className="text-lg font-semibold text-primary mt-1">
-                                            ${pkg.total} total
+                                        <div className="mt-4">
+                                            <div className="text-3xl font-bold">${pkg.price}</div>
+                                            <div className="text-sm text-muted-foreground">+ ${pkg.govtFee} state fee</div>
+                                            <div className="text-lg font-semibold text-primary mt-1">
+                                                ${pkg.total} total
+                                            </div>
                                         </div>
                                     </div>
                                 </CardHeader>
@@ -205,7 +207,7 @@ export default function PricingPage() {
 
                     <div className="space-y-8">
                         <div>
-                            <h3 className="text-lg font-semibold mb-2">What's included in the state fee?</h3>
+                            <h3 className="text-lg font-semibold mb-2">What&apos;s included in the state fee?</h3>
                             <p className="text-muted-foreground">
                                 The state fee covers the official government filing cost required by your chosen state.
                                 Wyoming charges $100, Delaware $90, Nevada $75. This fee goes directly to the state.

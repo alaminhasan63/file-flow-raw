@@ -2,7 +2,7 @@ import { getServerSupabase } from "@/lib/supabase/server";
 
 export async function UserDataFetcher() {
   try {
-    const supabase = getServerSupabase();
+    const supabase = await getServerSupabase();
     const { data: { user } } = await supabase.auth.getUser();
     return user?.email || null;
   } catch (error) {

@@ -1,15 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getBrowserSupabase } from "@/lib/supabase/client";
 
-type Row = { id:string; kind:string; title:string; body:string|null; filing_id:string|null; created_at:string; read_at:string|null };
+type Row = { id: string; kind: string; title: string; body: string | null; filing_id: string | null; created_at: string; read_at: string | null };
 
 export default function InboxPage() {
   const supabase = getBrowserSupabase();
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
 
-  async function load() {
+  const load = useCallback(async () => {
     setLoading(true);
     const uid = (await supabase.auth.getUser()).data.user?.id;
     if (!uid) return;
@@ -21,12 +21,13 @@ export default function InboxPage() {
       .limit(200);
     setRows((data ?? []) as any);
     setLoading(false);
-  }
-  useEffect(() => { load(); }, []);
+  }, [supabase]);
 
-  async function markRead(id:string) {
+  useEffect(() => { load(); }, [load]);
+
+  async function markRead(id: string) {
     await supabase.from("notifications").update({ read_at: new Date().toISOString() }).eq("id", id);
-    setRows(prev => prev.map(r => r.id===id ? { ...r, read_at: new Date().toISOString() } : r));
+    setRows(prev => prev.map(r => r.id === id ? { ...r, read_at: new Date().toISOString() } : r));
   }
 
   return (
@@ -44,7 +45,7 @@ export default function InboxPage() {
             </tr>
           </thead>
           <tbody>
-            {rows.map(r=>(
+            {rows.map(r => (
               <tr key={r.id} className="border-b">
                 <td className="p-3">
                   <div className="font-medium">{r.title}</div>
@@ -54,11 +55,11 @@ export default function InboxPage() {
                 <td className="p-3">{new Date(r.created_at).toLocaleString()}</td>
                 <td className="p-3">{r.read_at ? "Read" : "Unread"}</td>
                 <td className="p-3">
-                  {!r.read_at && <button onClick={()=>markRead(r.id)} className="rounded-lg border px-2 py-1 text-xs">Mark read</button>}
+                  {!r.read_at && <button onClick={() => markRead(r.id)} className="rounded-lg border px-2 py-1 text-xs">Mark read</button>}
                 </td>
               </tr>
             ))}
-            {rows.length===0 && !loading && <tr><td className="p-3 text-muted-foreground" colSpan={5}>Nothing here yet.</td></tr>}
+            {rows.length === 0 && !loading && <tr><td className="p-3 text-muted-foreground" colSpan={5}>Nothing here yet.</td></tr>}
             {loading && <tr><td className="p-3" colSpan={5}>Loading…</td></tr>}
           </tbody>
         </table>

@@ -29,9 +29,15 @@ export default function SignUpPage() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Create your account</CardTitle>
-            <CardDescription>You'll confirm by email to get started.</CardDescription>
+          <CardHeader>
+            <div className="text-center">
+              <CardTitle>
+                <div className="text-2xl">
+                  Create your account
+                </div>
+              </CardTitle>
+              <CardDescription>You&apos;ll confirm by email to get started.</CardDescription>
+            </div>
           </CardHeader>
           <CardContent>
             {msg && (

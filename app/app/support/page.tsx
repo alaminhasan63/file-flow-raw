@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getBrowserSupabase } from "@/lib/supabase/client";
 
 export default function SupportPage() {
@@ -7,15 +7,16 @@ export default function SupportPage() {
   const [rows, setRows] = useState<any[]>([]);
   const [body, setBody] = useState("");
 
-  async function load() {
+  const load = useCallback(async () => {
     const { data } = await supabase
       .from("messages")
       .select("id, body, from_role, created_at")
       .is("filing_id", null)
       .order("created_at", { ascending: true });
     setRows(data ?? []);
-  }
-  useEffect(() => { load(); }, []);
+  }, [supabase]);
+
+  useEffect(() => { load(); }, [load]);
 
   async function send() {
     const uid = (await supabase.auth.getUser()).data.user?.id;
@@ -40,11 +41,11 @@ export default function SupportPage() {
               <div>{m.body}</div>
             </li>
           ))}
-          {rows.length===0 && <li className="p-3 text-muted-foreground">No messages yet.</li>}
+          {rows.length === 0 && <li className="p-3 text-muted-foreground">No messages yet.</li>}
         </ul>
       </div>
       <div className="flex gap-2">
-        <input className="flex-1 border rounded px-3 py-2 text-sm" value={body} onChange={e=>setBody(e.target.value)} placeholder="Describe your issue…" />
+        <input className="flex-1 border rounded px-3 py-2 text-sm" value={body} onChange={e => setBody(e.target.value)} placeholder="Describe your issue…" />
         <button onClick={send} className="rounded-lg border px-3 py-2 text-sm">Send</button>
       </div>
     </div>

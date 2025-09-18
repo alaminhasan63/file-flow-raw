@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getBrowserSupabase } from "@/lib/supabase/client";
 import { Card, CardHeader, CardBody } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,11 +12,12 @@ export function DocumentsPanel({ filingId }: { filingId: string }) {
   const [busy, setBusy] = useState(false);
   const prefix = `filings/${filingId}/`;
 
-  async function load() {
+  const load = useCallback(async () => {
     const { data, error } = await supabase.storage.from("docs").list(prefix);
     if (!error) setRows((data ?? []) as any);
-  }
-  useEffect(() => { load(); }, []);
+  }, [supabase, prefix]);
+
+  useEffect(() => { load(); }, [load]);
 
   async function upload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -41,9 +42,9 @@ export function DocumentsPanel({ filingId }: { filingId: string }) {
       </CardHeader>
       <CardBody className="space-y-4">
         <div className="flex items-center gap-2">
-          <input 
-            type="file" 
-            onChange={upload} 
+          <input
+            type="file"
+            onChange={upload}
             disabled={busy}
             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           />
@@ -58,13 +59,13 @@ export function DocumentsPanel({ filingId }: { filingId: string }) {
               </tr>
             </thead>
             <tbody>
-              {rows.map(r=>(
+              {rows.map(r => (
                 <tr key={r.name} className="border-b hover:bg-muted/50">
                   <td className="p-3">{r.name}</td>
                   <td className="p-3">
-                    <Button 
-                      onClick={()=>download(r.name)} 
-                      variant="outline" 
+                    <Button
+                      onClick={() => download(r.name)}
+                      variant="outline"
                       size="sm"
                     >
                       Download
@@ -72,7 +73,7 @@ export function DocumentsPanel({ filingId }: { filingId: string }) {
                   </td>
                 </tr>
               ))}
-              {rows.length===0 && (
+              {rows.length === 0 && (
                 <tr>
                   <td className="p-6 text-center text-muted-foreground" colSpan={2}>
                     No documents yet.
