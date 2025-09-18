@@ -94,7 +94,7 @@ export function AppShell({ children, admin = false, email }: { children: ReactNo
       <div className="flex">
         {admin && <AdminSidebar />}
         <main className="flex-1">
-          <div className="container-wide py-8">{children}</div>
+          <div className="  py-8">{children}</div>
         </main>
       </div>
     </div>

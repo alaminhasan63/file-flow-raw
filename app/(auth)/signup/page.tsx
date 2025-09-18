@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { FileText } from 'lucide-react'
 import { getBrowserSupabase } from '@/lib/supabase/client'
+import { ensureUserProfile } from '@/lib/supabase/profile-utils'
 
 export default function SignUpPage() {
   const supabase = getBrowserSupabase()
@@ -38,9 +39,22 @@ export default function SignUpPage() {
 
     if (data.user && data.session) {
       // Email confirmations are disabled, user is signed in immediately
-      router.replace("/app")
+      // Ensure user profile exists
+      const profileErr = await ensureUserProfile(supabase, data.user);
+      if (profileErr) {
+        setErr(`Profile creation failed: ${profileErr}`);
+        return;
+      }
+      router.replace("/app/dashboard")
     } else if (data.user && !data.session) {
       // Email confirmations are enabled, user needs to confirm
+      // Create profile immediately for confirmed users
+      if (data.user.email_confirmed_at) {
+        const profileErr = await ensureUserProfile(supabase, data.user);
+        if (profileErr) {
+          console.error('Profile creation failed:', profileErr);
+        }
+      }
       setNotice("Check your email to confirm your account, then sign in.")
     }
   }

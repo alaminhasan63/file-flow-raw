@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { getBrowserSupabase } from "@/lib/supabase/client";
@@ -19,10 +19,11 @@ const FILING_STAGES = [
 
 const ERROR_STAGES = ['rejected', 'needs_info', 'failed'];
 
-function CustomerFilingStatusContent({ params }: any) {
+function CustomerFilingStatusContent({ params }: { params: Promise<{ filingId: string }> }) {
   const supabase = getBrowserSupabase();
   const router = useRouter();
-  const filingId = params.filingId;
+  const resolvedParams = use(params);
+  const filingId = resolvedParams.filingId;
   const [mounted, setMounted] = useState(false);
 
   const [filing, setFiling] = useState<any>(null);

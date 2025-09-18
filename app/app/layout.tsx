@@ -13,7 +13,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <AppShell email={email}>
+      <div className="container-wide">
+
       <RequireAuth>{children}</RequireAuth>
+      </div>
     </AppShell>
   );
 }
