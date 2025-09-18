@@ -271,7 +271,7 @@ export default function MarketingPage() {
             Ready to launch your LLC?
           </h2>
           <p className="mt-4 text-xl text-blue-100 max-w-2xl mx-auto">
-            Join hundreds of entrepreneurs who've simplified their business formation with FileFlow.
+            Join hundreds of entrepreneurs who&apos;ve simplified their business formation with FileFlow.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <a

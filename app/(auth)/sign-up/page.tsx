@@ -93,7 +93,7 @@ export default function SignUpPage() {
                   Check your email
                 </CardTitle>
                 <CardDescription className="text-gray-600">
-                  We've sent a confirmation link to your email address
+                  We&apos;ve sent a confirmation link to your email address
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -171,7 +171,7 @@ export default function SignUpPage() {
                 ))}
               </div>
               <p className="text-gray-700 text-sm italic mb-3">
-                "FileFlow made starting my LLC incredibly simple. Everything was handled professionally and quickly."
+                &ldquo;FileFlow made starting my LLC incredibly simple. Everything was handled professionally and quickly.&rdquo;
               </p>
               <div className="text-sm text-gray-600">
                 <span className="font-semibold">Sarah Chen</span> · Tech Startup Founder
